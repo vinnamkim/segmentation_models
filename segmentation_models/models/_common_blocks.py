@@ -71,7 +71,7 @@ def Conv2dBn(
         if activation:
             x = layers.Activation(activation, name=act_name)(x)
         
-        x = tf.keras.layers.Lambda(lambda x : zero_center(x, data_format))(x)
+        x = layers.Lambda(lambda x : zero_center(x, data_format))(x)
 
         return x
 

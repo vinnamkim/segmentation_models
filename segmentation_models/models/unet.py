@@ -96,7 +96,7 @@ def DecoderTransposeX2Block(filters, stage, use_batchnorm=False):
         if skip is not None:
             x = layers.Concatenate(axis=concat_axis, name=concat_name)([x, skip])
         
-        x = tf.keras.layers.Lambda(lambda x : zero_center(x, backend.image_data_format()))(x)
+        x = layers.Lambda(lambda x : zero_center(x, backend.image_data_format()))(x)
 
         x = Conv3x3BnReLU(filters, use_batchnorm, name=conv_block_name)(x)
 
