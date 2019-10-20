@@ -1,6 +1,6 @@
 from keras_applications import get_submodules_from_kwargs
 
-from ._common_blocks import Conv2dBn
+from ._common_blocks import Conv2dBn, ZeroCenter
 from ._utils import freeze_model
 from ..backbones.backbones_factory import Backbones
 
@@ -8,7 +8,6 @@ backend = None
 layers = None
 models = None
 keras_utils = None
-
 
 # ---------------------------------------------------------------------
 #  Utility functions
@@ -94,6 +93,8 @@ def DecoderTransposeX2Block(filters, stage, use_batchnorm=False):
 
         if skip is not None:
             x = layers.Concatenate(axis=concat_axis, name=concat_name)([x, skip])
+        
+        x = ZeroCenter(backend.image_data_format())(x)
 
         x = Conv3x3BnReLU(filters, use_batchnorm, name=conv_block_name)(x)
 

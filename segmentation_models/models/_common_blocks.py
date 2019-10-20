@@ -1,5 +1,17 @@
 from keras_applications import get_submodules_from_kwargs
 
+import tensorflow as tf
+
+class ZeroCenter(tf.keras.layers.Layer):
+    def __init__(self, data_format='channels_first', **kwargs):
+        super(ZeroCenter, self).__init__(**kwargs)
+        self.data_format = data_format
+
+    def call(self, x):
+        if self.data_format == 'channels_first':
+            return x - tf.reduce_mean(x, axis=[2, 3], keepdims=True)
+        else:
+            return x - tf.reduce_mean(x, axis=[1, 2], keepdims=True)
 
 def Conv2dBn(
         filters,
@@ -63,6 +75,8 @@ def Conv2dBn(
 
         if activation:
             x = layers.Activation(activation, name=act_name)(x)
+        
+        x = ZeroCenter(data_format)(x)
 
         return x
 
